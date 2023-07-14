@@ -1,0 +1,115 @@
+- project:
+    templates:
+      - openstack-python-jobs
+      - libec-pyeclib-jobs-arm64
+    check:
+      jobs:
+        - test-release-openstack:
+            vars:
+              build_wheel: false
+        - openstack-tox-py35:
+            vars:
+              tox_envlist: py35-compilelibs
+        - openstack-tox-py36
+        - openstack-tox-py37
+        - openstack-tox-py38
+        - openstack-tox-py39
+        - openstack-tox-py310
+        - pyeclib-tox-py311
+        - pyeclib-tox-py27-centos-7
+        - pyeclib-tox-py36-centos-8-stream
+        - libec-pyeclib-unit
+        - libec-pyeclib-unit-centos-7
+        - libec-pyeclib-unit-centos-8-stream
+    gate:
+      jobs:
+        - test-release-openstack:
+            vars:
+              build_wheel: false
+        - openstack-tox-py35:
+            vars:
+              tox_envlist: py35-compilelibs
+        - openstack-tox-py36
+        - openstack-tox-py37
+        - openstack-tox-py38
+        - openstack-tox-py39
+        - openstack-tox-py310
+        - pyeclib-tox-py311
+        - pyeclib-tox-py27-centos-7
+        - pyeclib-tox-py36-centos-8-stream
+        - libec-pyeclib-unit
+        - libec-pyeclib-unit-centos-7
+        - libec-pyeclib-unit-centos-8-stream
+    pre-release:
+      jobs:
+        - release-openstack-python:
+            vars:
+              build_wheel: false
+    release:
+      jobs:
+        - release-openstack-python:
+            vars:
+              build_wheel: false
+
+- job:
+    name: pyeclib-tox-py27-centos-7
+    parent: openstack-tox-py27
+    description: |
+      Run unit tests using ``py27`` environment on CentOS 7.
+    nodeset: centos-7
+
+- job:
+    name: pyeclib-tox-py36-centos-8-stream
+    parent: openstack-tox-py36
+    description: |
+      Run unit tests using ``py36`` environment on CentOS 8.
+    nodeset: centos-8-stream
+
+- job:
+    name: libec-pyeclib-unit-centos-7
+    parent: openstack-tox-py27
+    timeout: 1800
+    nodeset: centos-7
+    vars:
+      tox_envlist: py27-compilelibs
+
+- job:
+    name: libec-pyeclib-unit-centos-8-stream
+    parent: openstack-tox-py36
+    timeout: 1800
+    nodeset: centos-8-stream
+    vars:
+      tox_envlist: py36-compilelibs
+
+- job:
+    name: libec-pyeclib-unit
+    parent: openstack-tox-py39
+    timeout: 1800
+    vars:
+      tox_envlist: py39-compilelibs
+
+- job:
+    name: libec-pyeclib-unit-arm64
+    parent: libec-pyeclib-unit
+    nodeset: ubuntu-focal-arm64
+    description: |
+      Run unit tests for an OpenStack Python project under cPython
+      version 3.9 on top of arm64 architecture.
+
+- job:
+    name: pyeclib-tox-py311
+    parent: openstack-tox-py310
+    vars:
+      tox_envlist: py311
+      bindep_profile: test py311
+      python_version: '3.11'
+
+- project-template:
+    name: libec-pyeclib-jobs-arm64
+    description: |
+      Runs pyeclib unit tests designated for testing on top of
+      ARM64 architecture
+    check-arm64:
+      jobs:
+        - libec-pyeclib-unit-arm64:
+            voting: false
