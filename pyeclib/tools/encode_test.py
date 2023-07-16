@@ -2,12 +2,12 @@ from pyeclib.ec_iface import ECDriver
 
 def encode_test():
     
-    k = 4
-    m = 2
+    k = 1
+    m = 1
     ec_type = "isa_l_rs_vand"
     file_dir = "."
     filename = "encode_input"
-    fragment_dir = "./"
+    fragment_dir = "."
 
     print("k = %d, m = %d" % (k, m))
     print("ec_type = %s" % ec_type)
@@ -28,7 +28,6 @@ def encode_test():
         with open("%s/%s.%d" % (fragment_dir, filename, i), "wb") as fp:
             fp.write(fragment)
         i += 1
-
 
 if __name__ == "__main__":
     encode_test()
