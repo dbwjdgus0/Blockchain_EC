@@ -205,6 +205,7 @@ def mine(a, blockchain, node_pending_transactions):
             BLOCKCHAIN = [create_genesis_block()]
             print("SAVED!!")
             t1 = time.time()
+            break
         else:
             if loop_cnt % 50 == 0:
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
