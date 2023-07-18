@@ -17,10 +17,10 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 #BUFFER_SIZE = 67108864 #64MB
-BUFFER_SIZE = 1048576 #1MB
-# BUFFER_SIZE = 65536 #64KB
+# BUFFER_SIZE = 1048576 #1MB
+BUFFER_SIZE = 65536 #64KB
 
-def whole_dumps(blockchain):
+def write_block(blockchain):
     path_base = "./block_result"
     file_name = "res_" + str(datetime.now())
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
@@ -202,7 +202,7 @@ def mine(a, blockchain, node_pending_transactions):
 
         
         if(sys.getsizeof(BLOCKCHAIN) > BUFFER_SIZE):
-            whole_dumps(BLOCKCHAIN)
+            write_block(BLOCKCHAIN)
             BLOCKCHAIN = [create_genesis_block()]
             print("SAVED!!")
         else:
