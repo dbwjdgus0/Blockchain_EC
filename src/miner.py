@@ -12,6 +12,8 @@ import pickle
 
 from miner_config import MINER_ADDRESS, MINER_NODE_URL, PEER_NODES
 
+from pyeclib.ec_iface import ECDriver
+
 node = Flask(__name__)
 
 #BUFFER_SIZE = 67108864 #64MB
@@ -19,11 +21,33 @@ BUFFER_SIZE = 1048576 #1MB
 # BUFFER_SIZE = 65536 #64KB
 
 def whole_dumps(blockchain):
-    path_base = "./test_file"
-    file_path = path_base + str(datetime.now())
-    with open(file_path, 'wb') as file:
+    path_base = "./block_result"
+    file_name = "res_" + str(datetime.now())
+    with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
     
+    k = 1
+    m = 1    
+    ec_type = "liberasurecode_rs_vand"
+    fragment_dir = "./encoded"
+    
+    ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
+
+    # read
+    with open("%s/%s" % (path_base, file_name), "rb") as fp:
+        whole_file_str = fp.read()
+
+    # encode
+    fragments = ec_driver.encode(whole_file_str)
+
+    # store
+    i = 0
+    for fragment in fragments:
+        with open("%s/%s.%d" % (fragment_dir, file_name, i), "wb") as fp:
+            fp.write(fragment)
+        i += 1
+
+
     # with open("./test_file", 'rb') as file:
     #     blockchain = pickle.load(file)
 
