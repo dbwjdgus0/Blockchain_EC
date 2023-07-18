@@ -17,8 +17,8 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 #BLOCK_SIZE = 67108864 #64MB
-#BLOCK_SIZE = 1048576 #1MB
-BLOCK_SIZE = 65536 #64KB
+BLOCK_SIZE = 1048576 #1MB
+#BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain, t1):
     path_base = "./block_result"
