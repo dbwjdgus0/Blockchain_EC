@@ -2,19 +2,17 @@ import requests
 import time
 import base64
 import ecdsa
-import json
 
+addr_from = "gYKa1OqrP4op2+zIm+YI64Fwn9d8hn03nXClOh3a4H8FtD+dpTT9k/xPfVDrj/Ux275aWveuozdA44JQmzdnHQ=="
+private_key = "5b3b2d6abee547adbd490f099f3f4414f16a138cab4f4937e19f44adad6d42ff"
+addr_to = "0le3DBDMglT+JNHQ+dFBHoFlE813bp4EOxumSI0O01vi02wOWT3d5Z9nUycTV1fi9h7yzwLgEX9DSHpT6W9hsw=="
+amount = "3000"
 
-def benchmark():
-
+def infinite_transactions():
   t1 = time.time()
   cnt = 0
   while True:
     cnt += 1
-    addr_from = "gYKa1OqrP4op2+zIm+YI64Fwn9d8hn03nXClOh3a4H8FtD+dpTT9k/xPfVDrj/Ux275aWveuozdA44JQmzdnHQ=="
-    private_key = "5b3b2d6abee547adbd490f099f3f4414f16a138cab4f4937e19f44adad6d42ff"
-    addr_to = "0le3DBDMglT+JNHQ+dFBHoFlE813bp4EOxumSI0O01vi02wOWT3d5Z9nUycTV1fi9h7yzwLgEX9DSHpT6W9hsw=="
-    amount = "3000"
     send_transaction(addr_from, private_key, addr_to, amount)
     if(cnt % 500 == 0):
         t2 = time.time()
@@ -54,4 +52,4 @@ def sign_ECDSA_msg(private_key):
 
 
 if __name__ == '__main__':
-    benchmark()
+    infinite_transactions()

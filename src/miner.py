@@ -16,30 +16,25 @@ from pyeclib.ec_iface import ECDriver
 
 node = Flask(__name__)
 
-#BUFFER_SIZE = 67108864 #64MB
-# BUFFER_SIZE = 1048576 #1MB
-BUFFER_SIZE = 65536 #64KB
+#BLOCK_SIZE = 67108864 #64MB
+#BLOCK_SIZE = 1048576 #1MB
+BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain):
     path_base = "./block_result"
-    file_name = "res_" + str(datetime.now())
+    file_name = "res_" + datetime.now().strftime("%wY/%m/%d_%H:%M:%S")
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
-    
-    k = 1
-    m = 1    
-    ec_type = "liberasurecode_rs_vand"
-    fragment_dir = "./encoded"
-    
-    ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
+    encode_block(path_base, file_name)
 
+
+def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_rs_vand", fragment_dir = "./encoded"):
+    ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
     # read
     with open("%s/%s" % (path_base, file_name), "rb") as fp:
         whole_file_str = fp.read()
-
     # encode
     fragments = ec_driver.encode(whole_file_str)
-
     # store
     i = 0
     for fragment in fragments:
@@ -47,9 +42,6 @@ def write_block(blockchain):
             fp.write(fragment)
         i += 1
 
-
-    # with open("./test_file", 'rb') as file:
-    #     blockchain = pickle.load(file)
 
 def block_to_json(blockchain):
     path_base = "./json_block/"
@@ -142,10 +134,9 @@ def proof_of_work(last_proof, blockchain):
 def mine(a, blockchain, node_pending_transactions):
     BLOCKCHAIN = blockchain
     NODE_PENDING_TRANSACTIONS = node_pending_transactions
-    while True:
+    loop_cnt = 0
 
-        # if sys.getsizeof(BLOCKCHAIN) > 500:
-        #     BLOCKCHAIN = [create_genesis_block()]
+    while True:
 
         """Mining is the only way that new coins can be created.
         In order to prevent too many coins to be created, the process
@@ -201,13 +192,14 @@ def mine(a, blockchain, node_pending_transactions):
             # requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
 
         
-        if(sys.getsizeof(BLOCKCHAIN) > BUFFER_SIZE):
+        if(sys.getsizeof(BLOCKCHAIN) > BLOCK_SIZE):
             write_block(BLOCKCHAIN)
             BLOCKCHAIN = [create_genesis_block()]
             print("SAVED!!")
         else:
-            print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
-            print(str(round(sys.getsizeof(BLOCKCHAIN) / BUFFER_SIZE * 100 , 3)) + "%" +" done")
+            if loop_cnt % 50 == 0:
+                print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
+                print(str(round(sys.getsizeof(BLOCKCHAIN) / BLOCK_SIZE * 100 , 3)) + "%" +" done")
 
 
 
