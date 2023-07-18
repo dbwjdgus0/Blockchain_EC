@@ -22,7 +22,7 @@ BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain, t1):
     path_base = "./block_result"
-    file_name = "res_" + datetime.now().strftime("%wY/%m/%d_%H:%M:%S")
+    file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
     t2 = time.time()
