@@ -20,15 +20,19 @@ node = Flask(__name__)
 #BLOCK_SIZE = 1048576 #1MB
 BLOCK_SIZE = 65536 #64KB
 
-def write_block(blockchain):
+def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%wY/%m/%d_%H:%M:%S")
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
+    t2 = time.time()
+    print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
     encode_block(path_base, file_name)
 
 
 def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_rs_vand", fragment_dir = "./encoded"):
+    t1 = time.time()
+
     ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
     # read
     with open("%s/%s" % (path_base, file_name), "rb") as fp:
@@ -41,6 +45,11 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
         with open("%s/%s.%d" % (fragment_dir, file_name, i), "wb") as fp:
             fp.write(fragment)
         i += 1
+    t2 = time.time()
+    print("Block write - file name: {}, block size: {} MB, time: {} sec, k: {}, p: {}, ec_type: {}".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1, k, m, ec_type))
+
+
+
 
 
 def block_to_json(blockchain):
@@ -135,7 +144,7 @@ def mine(a, blockchain, node_pending_transactions):
     BLOCKCHAIN = blockchain
     NODE_PENDING_TRANSACTIONS = node_pending_transactions
     loop_cnt = 0
-
+    t1 = time.time()
     while True:
 
         """Mining is the only way that new coins can be created.
@@ -190,12 +199,12 @@ def mine(a, blockchain, node_pending_transactions):
 
             # a.send(BLOCKCHAIN)
             # requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
-
         
         if(sys.getsizeof(BLOCKCHAIN) > BLOCK_SIZE):
-            write_block(BLOCKCHAIN)
+            write_block(BLOCKCHAIN, t1)
             BLOCKCHAIN = [create_genesis_block()]
             print("SAVED!!")
+            t1 = time.time()
         else:
             if loop_cnt % 50 == 0:
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
