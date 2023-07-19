@@ -1,3 +1,5 @@
+AUTHORS
+LICENSE
 MANIFEST.in
 README.rst
 setup.py
@@ -14,11 +16,18 @@ src/c/pyeclib_c/capsulethunk.h
 src/c/pyeclib_c/pyeclib_c.c
 src/c/pyeclib_c/pyeclib_c.h
 test/__init__.py
+test/__init__.pyc
 test/ec_pyeclib_file_test.sh
 test/run_core_tests_manual.py
+test/run_core_tests_manual.pyc
 test/run_core_tests_manual_valgrind.py
+test/run_core_tests_manual_valgrind.pyc
 test/test_pyeclib_api.py
+test/test_pyeclib_api.pyc
 test/test_pyeclib_c.py
+test/test_pyeclib_c.pyc
+test/__pycache__/__init__.cpython-310.pyc
+test/__pycache__/run_core_tests_manual.cpython-310.pyc
 test/test_files/ames-msst06.pdf
 test/test_files/bhatnagar-hotemnets08.pdf
 test/test_files/greenan-dsn08.pdf
@@ -40,6 +49,7 @@ test/test_files/storer-pdsw08.pdf
 test/test_files/storer-storagess06.pdf
 test/test_files/storer-storagess08.pdf
 test/test_files/storer-usenix07.pdf
+tools/encode_test.py
 tools/pip-install-with-liberasurecode.sh
 tools/pyeclib_conf_tool.py
 tools/pyeclib_decode.py

@@ -1,11 +1,14 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: pyeclib
 Version: 1.6.1
 Summary: This library provides a simple Python interface for implementing erasure codes.  To obtain the best possible performance, the underlying erasure code algorithms are written in C.
 Home-page: https://opendev.org/openstack/pyeclib
-Author: Kevin Greenan and Tushar Gohad
-Author-email: kmgreen2@gmail.com, tusharsg@gmail.com
+Author: Kevin Greenan
+Author-email: kmgreen2@gmail.com
+Maintainer: Kevin Greenan and Tushar Gohad
+Maintainer-email: kmgreen2@gmail.com, tusharsg@gmail.com
 License: BSD
+Project-URL: Bug Tracker, https://bugs.launchpad.net/pyeclib
 Description: PyEClib
         -------
         
@@ -153,3 +156,4 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: BSD License
+Description-Content-Type: text/x-rst
