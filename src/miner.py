@@ -4,7 +4,7 @@ import json
 import requests
 import base64
 from flask import Flask, request
-from multiprocessing import Process, Pipe
+from multiprocessing import Process, Pipe, Queue
 import ecdsa
 import sys
 from datetime import datetime 
@@ -17,14 +17,21 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 #BLOCK_SIZE = 67108864 #64MB
-BLOCK_SIZE = 1048576 #1MB
-#BLOCK_SIZE = 65536 #64KB
+# BLOCK_SIZE = 1048576 #1MB
+BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
-    with open("%s/%s" % (path_base, file_name) , 'wb') as file:
-        pickle.dump(blockchain, file)
+    with open("%s/%s" % (path_base, file_name) , 'w') as file:
+        for block in blockchain:
+            temp = {}
+            temp['index'] = block.index
+            temp['timestamp'] = block.timestamp
+            temp['data'] = str(block.data)
+            temp['previous_hash'] = block.previous_hash
+            temp['hash'] = block.hash
+            file.write(str(temp))
     t2 = time.time()
     print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
     encode_block(path_base, file_name)
@@ -35,8 +42,9 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
 
     ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
     # read
-    with open("%s/%s" % (path_base, file_name), "rb") as fp:
+    with open("%s/%s" % (path_base, file_name), "r") as fp:
         whole_file_str = fp.read()
+
     # encode
     fragments = ec_driver.encode(whole_file_str)
     # store
@@ -47,8 +55,6 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
         i += 1
     t2 = time.time()
     print("Block write - file name: {}, block size: {} MB, time: {} sec, k: {}, p: {}, ec_type: {}".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1, k, m, ec_type))
-
-
 
 
 
@@ -140,7 +146,7 @@ def proof_of_work(last_proof, blockchain):
     return incrementer, blockchain
 
 
-def mine(a, blockchain, node_pending_transactions):
+def mine(queue, blockchain, node_pending_transactions):
     BLOCKCHAIN = blockchain
     NODE_PENDING_TRANSACTIONS = node_pending_transactions
     loop_cnt = 0
@@ -174,8 +180,18 @@ def mine(a, blockchain, node_pending_transactions):
             # Once we find a valid proof of work, we know we can mine a block so
             # ...we reward the miner by adding a transaction
             # First we load all pending transactions sent to the node server
-            NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
-            NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
+            
+            # 찾았다
+            # NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
+            # NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
+            print('aa')
+            
+            if queue.empty():
+                NODE_PENDING_TRANSACTIONS = []
+                print('cc')
+            else:
+                NODE_PENDING_TRANSACTIONS = queue.get()
+                print('bb')
 
             # Then we add the mining reward
             NODE_PENDING_TRANSACTIONS.append({
@@ -297,6 +313,8 @@ def transaction():
             print("TO: {0}".format(new_txion['to']))
             print("AMOUNT: {0}\n".format(new_txion['amount']))
             # Then we let the client know it worked out
+
+            queue.put(NODE_PENDING_TRANSACTIONS)
             return "Transaction submission successful\n"
         else:
             return "Transaction submission failed. Wrong signature\n"
@@ -334,11 +352,16 @@ def welcome_msg():
 
 if __name__ == '__main__':
     welcome_msg()
-    # Start mining
-    pipe_output, pipe_input = Pipe()
-    miner_process = Process(target=mine, args=(pipe_output, BLOCKCHAIN, NODE_PENDING_TRANSACTIONS))
-    miner_process.start()
 
-    # Start server to receive transactions
-    transactions_process = Process(target=node.run(), args=pipe_input)
+    queue = Queue()
+
+    pipe_output, pipe_input = Pipe()
+    miner_process = Process(target=mine, args=(queue, BLOCKCHAIN, NODE_PENDING_TRANSACTIONS))
+    miner_process.start()
+   
+    transactions_process = Process(target=node.run(), args=(queue, ))
     transactions_process.start()
+
+    miner_process.join()
+    transactions_process.join()
+
