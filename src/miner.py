@@ -17,8 +17,8 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 # BLOCK_SIZE = 67108864 #64MB
-BLOCK_SIZE =   33554432 #32MB
-# BLOCK_SIZE = 1048576 #1MB
+# BLOCK_SIZE =   33554432 #32MB
+BLOCK_SIZE = 1048576 #1MB
 # BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain, t1):
@@ -233,9 +233,9 @@ def mine(queue, blockchain, node_pending_transactions):
                 "proof-of-work": proof[0],
                 "transactions": list(NODE_PENDING_TRANSACTIONS)
             }
-            new_block_index = last_block['index'] + 1
+            new_block_index = last_block.index + 1
             new_block_timestamp = time.time()
-            last_block_hash = last_block['hash']
+            last_block_hash = last_block.hash
             # Empty transaction list
             NODE_PENDING_TRANSACTIONS = []
             # Now create the new block
