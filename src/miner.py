@@ -255,7 +255,8 @@ def mine(queue, blockchain, node_pending_transactions):
             if loop_cnt % 200 == 0:
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / BLOCK_SIZE * 100 , 3)) + "%" +" done")
-                print(mined_block)
+                print(mined_block.index)
+                print(mined_block.data)
 
 
 
