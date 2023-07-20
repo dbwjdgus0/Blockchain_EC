@@ -222,7 +222,7 @@ def mine(queue, blockchain, node_pending_transactions):
             print('cc')
         else:
             print('ee')
-            NODE_PENDING_TRANSACTIONS = [json.load(queue.get())]
+            NODE_PENDING_TRANSACTIONS = [queue.get()]
             print('ddddd')
         # Then we add the mining reward
         NODE_PENDING_TRANSACTIONS.append({
