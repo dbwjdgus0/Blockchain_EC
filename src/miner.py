@@ -236,8 +236,8 @@ def mine(queue, blockchain, node_pending_transactions):
             # Empty transaction list
             NODE_PENDING_TRANSACTIONS = []
             # Now create the new block
+            
             mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
-
             # mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
             BLOCKCHAIN.append(mined_block)
             # Let the client know this node mined a block
@@ -252,9 +252,11 @@ def mine(queue, blockchain, node_pending_transactions):
             t1 = time.time()
             break
         else:
-            if loop_cnt % 50 == 0:
+            if loop_cnt % 200 == 0:
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
                 print(str(round(sys.getsizeof(BLOCKCHAIN) / BLOCK_SIZE * 100 , 3)) + "%" +" done")
+                print(mined_block)
+
 
 
 
