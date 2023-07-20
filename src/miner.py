@@ -48,7 +48,7 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
         whole_file_str = fp.read()
 
     # encode
-    print("EC input size: {}".format(whole_file_str))
+    print("EC input size: {}".format(sys.getsizeof(whole_file_str)))
     fragments = ec_driver.encode(whole_file_str)
     # store
     i = 0
