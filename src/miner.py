@@ -17,7 +17,7 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 #BLOCK_SIZE = 67108864 #64MB
-BLOCK_SIZE = 1048576 #1MB
+# BLOCK_SIZE = 1048576 #1MB
 BLOCK_SIZE = 65536 #64KB
 
 def write_block(blockchain, t1):
@@ -188,7 +188,7 @@ def mine(queue, blockchain, node_pending_transactions):
         
         
         last_block = BLOCKCHAIN[-1]
-        last_proof = last_block.data['proof-of-work']
+        last_proof = last_block['data']['proof-of-work']
         
         
         # Find the proof of work for the current block being mined
