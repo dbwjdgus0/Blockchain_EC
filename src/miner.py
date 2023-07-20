@@ -107,14 +107,40 @@ class Block:
         return sha.hexdigest()
 
 
+def gen_block(idx, timestamp, data, prev_hash):
+    new_block = {
+        'index': idx,
+        'timestamp': timestamp,
+        'data': data,
+        'previous_hash': prev_hash,
+    }
+    new_hash = hash_block(new_block)
+    new_block['hash'] = new_hash
+
+    return new_block
+    
+def hash_block(new_block):
+    """Creates the unique hash for the block. It uses sha256."""
+    sha = hashlib.sha256()
+    sha.update((str(new_block['index']) + str(new_block['timestamp']) + str(new_block['data']) + str(new_block['previous_hash'])).encode('utf-8'))
+    return sha.hexdigest()
+
+
+# def create_genesis_block():
+#     """To create each block, it needs the hash of the previous one. First
+#     block has no previous, so it must be created manually (with index zero
+#      and arbitrary previous hash)"""
+#     return Block(0, time.time(), {
+#         "proof-of-work": 9,
+#         "transactions": None},
+#         "0")
+
+
 def create_genesis_block():
     """To create each block, it needs the hash of the previous one. First
     block has no previous, so it must be created manually (with index zero
      and arbitrary previous hash)"""
-    return Block(0, time.time(), {
-        "proof-of-work": 9,
-        "transactions": None},
-        "0")
+    return gen_block(0, time.time(), { "proof-of-work": 9, "transactions": None}, "0")
 
 
 # Node's blockchain copy
@@ -204,13 +230,15 @@ def mine(queue, blockchain, node_pending_transactions):
                 "proof-of-work": proof[0],
                 "transactions": list(NODE_PENDING_TRANSACTIONS)
             }
-            new_block_index = last_block.index + 1
+            new_block_index = last_block['index'] + 1
             new_block_timestamp = time.time()
-            last_block_hash = last_block.hash
+            last_block_hash = last_block['hash']
             # Empty transaction list
             NODE_PENDING_TRANSACTIONS = []
             # Now create the new block
-            mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+            # mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+
+            mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
             BLOCKCHAIN.append(mined_block)
             # Let the client know this node mined a block
 
@@ -309,12 +337,13 @@ def transaction():
             NODE_PENDING_TRANSACTIONS.append(new_txion)
             # Because the transaction was successfully
             # submitted, we log it to our console
-            print("New transaction")
-            print("FROM: {0}".format(new_txion['from']))
-            print("TO: {0}".format(new_txion['to']))
-            print("AMOUNT: {0}\n".format(new_txion['amount']))
-            # Then we let the client know it worked out
 
+            # print("New transaction")
+            # print("FROM: {0}".format(new_txion['from']))
+            # print("TO: {0}".format(new_txion['to']))
+            # print("AMOUNT: {0}\n".format(new_txion['amount']))
+
+            # Then we let the client know it worked out
             queue.put(NODE_PENDING_TRANSACTIONS)
             return "Transaction submission successful\n"
         else:
