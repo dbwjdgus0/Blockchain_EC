@@ -40,7 +40,7 @@ def write_block(blockchain, t1):
     encode_block(path_base, file_name)
 
 
-def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_rs_vand", fragment_dir = "./encoded"):
+def encode_block(path_base, file_name, k = 2, m = 4, ec_type = "liberasurecode_rs_vand", fragment_dir = "./encoded"):
     t1 = time.time()
 
     ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
