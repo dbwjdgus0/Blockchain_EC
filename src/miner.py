@@ -212,16 +212,13 @@ def mine(queue, blockchain, node_pending_transactions):
             # First we load all pending transactions sent to the node server
             
             # 찾았다
-            # NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
-            # NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
-            print('aa')
+            NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
+            NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
             
-            if queue.empty():
-                NODE_PENDING_TRANSACTIONS = []
-                print('cc')
-            else:
-                NODE_PENDING_TRANSACTIONS = queue.get()
-                print('bb')
+            # if queue.empty():
+            #     NODE_PENDING_TRANSACTIONS = []
+            # else:
+            #     NODE_PENDING_TRANSACTIONS = queue.get()
 
             # Then we add the mining reward
             NODE_PENDING_TRANSACTIONS.append({
