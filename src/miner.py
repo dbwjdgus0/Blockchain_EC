@@ -17,7 +17,7 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 # BLOCK_SIZE = 67108864 #64MB
-# BLOCK_SIZE =   33554432 #32MB
+# BLOCK_SIZE = 33554432 #32MB
 BLOCK_SIZE = 1048576 #1MB
 # BLOCK_SIZE = 65536 #64KB
 
@@ -212,13 +212,13 @@ def mine(queue, blockchain, node_pending_transactions):
             # First we load all pending transactions sent to the node server
             
             # 찾았다
-            NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
-            NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
+            # NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
+            # NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
             
-            # if queue.empty():
-            #     NODE_PENDING_TRANSACTIONS = []
-            # else:
-            #     NODE_PENDING_TRANSACTIONS = queue.get()
+            if queue.empty():
+                NODE_PENDING_TRANSACTIONS = []
+            else:
+                NODE_PENDING_TRANSACTIONS = queue.get()
 
             # Then we add the mining reward
             NODE_PENDING_TRANSACTIONS.append({
