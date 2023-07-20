@@ -23,6 +23,7 @@ BLOCK_SIZE = 65536 #64KB
 def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+    print("blockchain size: {}".format(sys.getsizeof(blockchain)))
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
         # for block in blockchain:
@@ -47,6 +48,7 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
         whole_file_str = fp.read()
 
     # encode
+    print("EC input size: {}".format(whole_file_str))
     fragments = ec_driver.encode(whole_file_str)
     # store
     i = 0
