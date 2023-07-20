@@ -337,7 +337,7 @@ def transaction():
         new_txion = request.get_json()
         # Then we add the transaction to our list
         if validate_signature(new_txion['from'], new_txion['signature'], new_txion['message']):
-            pending_transactions.append(new_txion)
+            # NODE_PENDING_TRANSACTIONS.append()
             # Because the transaction was successfully
             # submitted, we log it to our console
 
@@ -347,8 +347,7 @@ def transaction():
             # print("AMOUNT: {0}\n".format(new_txion['amount']))
 
             # Then we let the client know it worked out
-            queue.put(pending_transactions)
-            pending_transactions = []
+            queue.put(new_txion)
             return "Transaction submission successful\n"
         else:
             return "Transaction submission failed. Wrong signature\n"
@@ -392,8 +391,8 @@ if __name__ == '__main__':
     pipe_output, pipe_input = Pipe()
     miner_process = Process(target=mine, args=(queue, BLOCKCHAIN, NODE_PENDING_TRANSACTIONS))
     miner_process.start()
-    pending_transactions = []
-    transactions_process = Process(target=node.run(), args=(queue, pending_transactions))
+   
+    transactions_process = Process(target=node.run(), args=(queue, ))
     transactions_process.start()
 
     miner_process.join()
