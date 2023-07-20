@@ -348,6 +348,7 @@ def transaction():
 
             # Then we let the client know it worked out
             queue.put(NODE_PENDING_TRANSACTIONS)
+            NODE_PENDING_TRANSACTIONS = []
             return "Transaction submission successful\n"
         else:
             return "Transaction submission failed. Wrong signature\n"
