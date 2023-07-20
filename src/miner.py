@@ -24,16 +24,16 @@ def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
     print("blockchain size: {}".format(sys.getsizeof(blockchain)))
-    with open("%s/%s" % (path_base, file_name) , 'wb') as file:
-        pickle.dump(blockchain, file)
-        # for block in blockchain:
-        #     temp = {}
-        #     temp['index'] = block.index
-        #     temp['timestamp'] = block.timestamp
-        #     temp['data'] = str(block.data)
-        #     temp['previous_hash'] = block.previous_hash
-        #     temp['hash'] = block.hash
-        #     file.write(str(temp))
+    with open("%s/%s" % (path_base, file_name) , 'w') as file:
+        # pickle.dump(blockchain, file)
+        for block in blockchain:
+            temp = {}
+            temp['index'] = block['index']
+            temp['timestamp'] = block['timestamp']
+            temp['data'] = str(block['data'])
+            temp['previous_hash'] = block['previous_hash']
+            temp['hash'] = block['hash']
+            file.write(str(temp))
     t2 = time.time()
     print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
     encode_block(path_base, file_name)
@@ -44,7 +44,7 @@ def encode_block(path_base, file_name, k = 1, m = 1, ec_type = "liberasurecode_r
 
     ec_driver = ECDriver(k=k, m=m, ec_type=ec_type)
     # read
-    with open("%s/%s" % (path_base, file_name), "rb") as fp:
+    with open("%s/%s" % (path_base, file_name), "r") as fp:
         whole_file_str = fp.read()
 
     # encode
