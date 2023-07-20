@@ -17,7 +17,7 @@ from pyeclib.ec_iface import ECDriver
 node = Flask(__name__)
 
 # BLOCK_SIZE = 67108864 #64MB
-BLOCK_SIZE = 33554432 #32MB
+BLOCK_SIZE =   33554432 #32MB
 # BLOCK_SIZE = 1048576 #1MB
 # BLOCK_SIZE = 65536 #64KB
 
@@ -129,21 +129,20 @@ def hash_block(new_block):
     return sha.hexdigest()
 
 
-# def create_genesis_block():
-#     """To create each block, it needs the hash of the previous one. First
-#     block has no previous, so it must be created manually (with index zero
-#      and arbitrary previous hash)"""
-#     return Block(0, time.time(), {
-#         "proof-of-work": 9,
-#         "transactions": None},
-#         "0")
-
-
 def create_genesis_block():
     """To create each block, it needs the hash of the previous one. First
     block has no previous, so it must be created manually (with index zero
      and arbitrary previous hash)"""
-    return gen_block(0, time.time(), { "proof-of-work": 9, "transactions": None}, "0")
+    return Block(0, time.time(), {
+        "proof-of-work": 9,
+        "transactions": None},
+        "0")
+
+# def create_genesis_block():
+#     """To create each block, it needs the hash of the previous one. First
+#     block has no previous, so it must be created manually (with index zero
+#      and arbitrary previous hash)"""
+#     return gen_block(0, time.time(), { "proof-of-work": 9, "transactions": None}, "0")
 
 
 # Node's blockchain copy
@@ -191,7 +190,8 @@ def mine(queue, blockchain, node_pending_transactions):
         
         
         last_block = BLOCKCHAIN[-1]
-        last_proof = last_block['data']['proof-of-work']
+        last_proof = last_block.data['proof-of-work']
+        # last_proof = last_block['data']['proof-of-work']
         
         
         # Find the proof of work for the current block being mined
@@ -239,9 +239,9 @@ def mine(queue, blockchain, node_pending_transactions):
             # Empty transaction list
             NODE_PENDING_TRANSACTIONS = []
             # Now create the new block
-            # mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+            mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
 
-            mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+            # mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
             BLOCKCHAIN.append(mined_block)
             # Let the client know this node mined a block
 
