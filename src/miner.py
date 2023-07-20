@@ -197,16 +197,16 @@ def mine(queue, blockchain, node_pending_transactions):
         # Find the proof of work for the current block being mined
         # Note: The program will hang here until a new proof of work is found
         
-        proof = proof_of_work(last_proof, BLOCKCHAIN)
+        # proof = proof_of_work(last_proof, BLOCKCHAIN)
         
         # If we didn't guess the proof, start mining again
         
-        if not proof[0]:
-            # Update blockchain and save it to file
-            BLOCKCHAIN = proof[1]
-            # a.send(BLOCKCHAIN)
-            continue
-        else:
+        # if not proof[0]:
+        #     # Update blockchain and save it to file
+        #     BLOCKCHAIN = proof[1]
+        #     # a.send(BLOCKCHAIN)
+        #     continue
+        # else:
             # Once we find a valid proof of work, we know we can mine a block so
             # ...we reward the miner by adding a transaction
             # First we load all pending transactions sent to the node server
@@ -214,36 +214,40 @@ def mine(queue, blockchain, node_pending_transactions):
             # 찾았다
             # NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
             # NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
-            
-            if queue.empty():
-                NODE_PENDING_TRANSACTIONS = []
-            else:
-                NODE_PENDING_TRANSACTIONS = queue.get()
-
-            # Then we add the mining reward
-            NODE_PENDING_TRANSACTIONS.append({
-                "from": "network",
-                "to": MINER_ADDRESS,
-                "amount": 1})
-            # Now we can gather the data needed to create the new block
-            new_block_data = {
-                "proof-of-work": proof[0],
-                "transactions": list(NODE_PENDING_TRANSACTIONS)
-            }
-            new_block_index = last_block.index + 1
-            new_block_timestamp = time.time()
-            last_block_hash = last_block.hash
-            # Empty transaction list
+        
+        print('aa')
+        if queue.empty():
+            print('bb')
             NODE_PENDING_TRANSACTIONS = []
-            # Now create the new block
-            
-            mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
-            # mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
-            BLOCKCHAIN.append(mined_block)
-            # Let the client know this node mined a block
+            print('cc')
+        else:
+            print('ee')
+            NODE_PENDING_TRANSACTIONS = queue.get()
+            print('ddddd')
+        # Then we add the mining reward
+        NODE_PENDING_TRANSACTIONS.append({
+            "from": "network",
+            "to": MINER_ADDRESS,
+            "amount": 1})
+        # Now we can gather the data needed to create the new block
+        new_block_data = {
+            "proof-of-work": last_proof + 1,
+            "transactions": list(NODE_PENDING_TRANSACTIONS)
+        }
+        new_block_index = last_block.index + 1
+        new_block_timestamp = time.time()
+        last_block_hash = last_block.hash
+        # Empty transaction list
+        NODE_PENDING_TRANSACTIONS = []
+        # Now create the new block
+        
+        mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+        # mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+        BLOCKCHAIN.append(mined_block)
+        # Let the client know this node mined a block
 
-            # a.send(BLOCKCHAIN)
-            # requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
+        # a.send(BLOCKCHAIN)
+        # requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
         
         if(sys.getsizeof(BLOCKCHAIN) > BLOCK_SIZE):
             write_block(BLOCKCHAIN, t1)
