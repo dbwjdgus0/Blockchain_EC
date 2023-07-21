@@ -25,26 +25,26 @@ def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
     print("blockchain size: {}".format(sys.getsizeof(blockchain)))
-    temp = blockchain[0]
-    print(temp.index)
-    print(sys.getsizeof(temp.index))
-    print(temp.timestamp)
-    print(sys.getsizeof(temp.timestamp))
-    print(temp.hash)
-    print(sys.getsizeof(temp.hash))
-    print(temp.data)
-    print(sys.getsizeof(temp.data))
+    # temp = blockchain[0]
+    # print(temp.index)
+    # print(sys.getsizeof(temp.index))
+    # print(temp.timestamp)
+    # print(sys.getsizeof(temp.timestamp))
+    # print(temp.hash)
+    # print(sys.getsizeof(temp.hash))
+    # print(temp.data)
+    # print(sys.getsizeof(temp.data))
 
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
-        pickle.dump(blockchain, file)
-        # for block in blockchain:
-        #     temp = {}
-        #     temp['index'] = block['index']
-        #     temp['timestamp'] = block['timestamp']
-        #     temp['data'] = str(block['data'])
-        #     temp['previous_hash'] = block['previous_hash']
-        #     temp['hash'] = block['hash']
-        #     file.write(str(temp))
+        # pickle.dump(blockchain, file)
+        for block in blockchain:
+            temp = ''
+            temp += block['index']
+            temp += block['timestamp']
+            temp += str(block['data'])
+            temp += block['previous_hash']
+            temp += block['hash']
+            file.write(temp)
     t2 = time.time()
     print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
     encode_block(path_base, file_name)
@@ -139,20 +139,20 @@ def hash_block(new_block):
     return sha.hexdigest()
 
 
-def create_genesis_block():
-    """To create each block, it needs the hash of the previous one. First
-    block has no previous, so it must be created manually (with index zero
-     and arbitrary previous hash)"""
-    return Block(0, time.time(), {
-        "proof-of-work": 9,
-        "transactions": None},
-        "0")
-
 # def create_genesis_block():
 #     """To create each block, it needs the hash of the previous one. First
 #     block has no previous, so it must be created manually (with index zero
 #      and arbitrary previous hash)"""
-#     return gen_block(0, time.time(), { "proof-of-work": 9, "transactions": None}, "0")
+#     return Block(0, time.time(), {
+#         "proof-of-work": 9,
+#         "transactions": None},
+#         "0")
+
+def create_genesis_block():
+    """To create each block, it needs the hash of the previous one. First
+    block has no previous, so it must be created manually (with index zero
+     and arbitrary previous hash)"""
+    return gen_block(0, time.time(), { "proof-of-work": 9, "transactions": None}, "0")
 
 
 # Node's blockchain copy
@@ -200,8 +200,8 @@ def mine(queue, blockchain, node_pending_transactions):
         
         
         last_block = BLOCKCHAIN[-1]
-        last_proof = last_block.data['proof-of-work']
-        # last_proof = last_block['data']['proof-of-work']
+        # last_proof = last_block.data['proof-of-work']
+        last_proof = last_block['data']['proof-of-work']
         
         
         # Find the proof of work for the current block being mined
@@ -239,15 +239,15 @@ def mine(queue, blockchain, node_pending_transactions):
             "proof-of-work": last_proof + 1,
             "transactions": list(NODE_PENDING_TRANSACTIONS)
         }
-        new_block_index = last_block.index + 1
+        new_block_index = last_block['index'] + 1
         new_block_timestamp = time.time()
-        last_block_hash = last_block.hash
+        last_block_hash = last_block['hash']
         # Empty transaction list
         NODE_PENDING_TRANSACTIONS = []
         # Now create the new block
         
-        mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
-        # mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+        # mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+        mined_block = gen_block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
         BLOCKCHAIN.append(mined_block)
         # Let the client know this node mined a block
 
