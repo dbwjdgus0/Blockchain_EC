@@ -25,6 +25,16 @@ def write_block(blockchain, t1):
     path_base = "./block_result"
     file_name = "res_" + datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
     print("blockchain size: {}".format(sys.getsizeof(blockchain)))
+    temp = blockchain[0]
+    print(temp.index)
+    print(sys.getsizeof(temp.index))
+    print(temp.timestamp)
+    print(sys.getsizeof(temp.timestamp))
+    print(temp.hash)
+    print(sys.getsizeof(temp.hash))
+    print(temp.data)
+    print(sys.getsizeof(temp.data))
+
     with open("%s/%s" % (path_base, file_name) , 'wb') as file:
         pickle.dump(blockchain, file)
         # for block in blockchain:
