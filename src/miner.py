@@ -35,7 +35,7 @@ def write_block(blockchain, t1):
     # print(temp.data)
     # print(sys.getsizeof(temp.data))
 
-    with open("%s/%s" % (path_base, file_name) , 'wb') as file:
+    with open("%s/%s" % (path_base, file_name) , 'w') as file:
         # pickle.dump(blockchain, file)
         for block in blockchain:
             temp = ''
