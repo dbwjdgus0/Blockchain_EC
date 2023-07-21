@@ -225,15 +225,10 @@ def mine(queue, blockchain, node_pending_transactions):
             # NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
             # NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
         
-        print('aa')
         if queue.empty():
-            print('bb')
             NODE_PENDING_TRANSACTIONS = []
-            print('cc')
         else:
-            print('ee')
             NODE_PENDING_TRANSACTIONS = [queue.get()]
-            print('ddddd')
         # Then we add the mining reward
         NODE_PENDING_TRANSACTIONS.append({
             "from": "network",
@@ -265,12 +260,12 @@ def mine(queue, blockchain, node_pending_transactions):
             print("SAVED!!")
             t1 = time.time()
             break
-        else:
-            if loop_cnt % 200 == 0:
-                print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
-                print(str(round(sys.getsizeof(BLOCKCHAIN) / BLOCK_SIZE * 100 , 3)) + "%" +" done")
-                print(mined_block.index)
-                print(len(mined_block.data['transactions']))
+        # else:
+        #     if loop_cnt % 200 == 0:
+        #         print(str(round(sys.getsizeof(BLOCKCHAIN) / 1024, 3)) + " KB")
+        #         print(str(round(sys.getsizeof(BLOCKCHAIN) / BLOCK_SIZE * 100 , 3)) + "%" +" done")
+        #         print(mined_block.index)
+        #         print(len(mined_block.data['transactions']))
 
 
 
