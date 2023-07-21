@@ -39,8 +39,8 @@ def write_block(blockchain, t1):
         # pickle.dump(blockchain, file)
         for block in blockchain:
             temp = ''
-            temp += block['index']
-            temp += block['timestamp']
+            temp += str(block['index'])
+            temp += str(block['timestamp'])
             temp += str(block['data'])
             temp += block['previous_hash']
             temp += block['hash']
