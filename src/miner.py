@@ -37,14 +37,16 @@ def write_block(blockchain, t1):
 
     with open("%s/%s" % (path_base, file_name) , 'w') as file:
         # pickle.dump(blockchain, file)
-        for block in blockchain:
-            temp = ''
-            temp += str(block['index'])
-            temp += str(block['timestamp'])
-            temp += str(block['data'])
-            temp += block['previous_hash']
-            temp += block['hash']
-            file.write(temp)
+        # for block in blockchain:
+        #     temp = ''
+        #     temp += str(block['index'])
+        #     temp += str(block['timestamp'])
+        #     temp += str(block['data'])
+        #     temp += block['previous_hash']
+        #     temp += block['hash']
+        #     file.write(temp)
+        file.write(str(blockchain))
+
     t2 = time.time()
     print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
     encode_block(path_base, file_name)
