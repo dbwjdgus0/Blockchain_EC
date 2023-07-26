@@ -48,7 +48,7 @@ def write_block(blockchain, t1):
         file.write(str(blockchain))
 
     t2 = time.time()
-    print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1))
+    print("Block write - file name: {}, block size: {} MB, time: {} sec".format(file_name, 16, t2-t1))
     encode_block(path_base, file_name)
 
 
@@ -61,7 +61,7 @@ def encode_block(path_base, file_name, k = 2, m = 4, ec_type = "liberasurecode_r
         whole_file_str = fp.read()
 
     # encode
-    print("EC input size: {}".format(sys.getsizeof(whole_file_str)))
+    # print("EC input size: {}".format(sys.getsizeof(whole_file_str)))
     fragments = ec_driver.encode(whole_file_str)
     # store
     i = 0
@@ -70,7 +70,7 @@ def encode_block(path_base, file_name, k = 2, m = 4, ec_type = "liberasurecode_r
             fp.write(fragment)
         i += 1
     t2 = time.time()
-    print("Encoded - file name: {}, block size: {} MB, time: {} sec, k: {}, p: {}, ec_type: {}".format(file_name, BLOCK_SIZE / 1024 / 1024, t2-t1, k, m, ec_type))
+    print("Encoded - file name: {}, block size: {} MB, time: {} sec, k: {}, p: {}, ec_type: {}".format(file_name, 16, t2-t1, k, m, ec_type))
 
 
 
